@@ -4,27 +4,22 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>42 Blackhole Calculator</title>
-  <!-- Tailwind CSS via CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-slate-900 text-slate-100 min-h-screen flex items-center justify-center p-4">
 
   <div class="max-w-md w-full bg-slate-800 border border-slate-700 rounded-2xl p-6 shadow-xl space-y-6">
-    <!-- Header -->
     <div class="text-center">
       <h1 class="text-2xl font-bold text-teal-400">42 Blackhole Calculator</h1>
       <p class="text-xs text-slate-400 mt-1">Cálculo baseado no limite do Pace 24 & Reajustes</p>
     </div>
 
-    <!-- Inputs -->
     <div class="space-y-4 text-sm">
-      <!-- Data de Inicio -->
       <div>
         <label for="startDate" class="block mb-1 text-slate-300 font-medium">Data de Início (Start Date)</label>
         <input type="date" id="startDate" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white focus:ring-2 focus:ring-teal-400 focus:outline-none">
       </div>
 
-      <!-- Pace Atual -->
       <div>
         <label for="pace" class="block mb-1 text-slate-300 font-medium">Pace Atual</label>
         <select id="pace" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white focus:ring-2 focus:ring-teal-400 focus:outline-none">
@@ -37,7 +32,6 @@
         </select>
       </div>
 
-      <!-- Milestone -->
       <div>
         <label for="milestone" class="block mb-1 text-slate-300 font-medium">Milestone Target</label>
         <select id="milestone" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white focus:ring-2 focus:ring-teal-400 focus:outline-none">
@@ -51,7 +45,6 @@
         </select>
       </div>
 
-      <!-- Extras Grid -->
       <div class="grid grid-cols-2 gap-3">
         <div>
           <label for="freeze" class="block mb-1 text-slate-300 font-medium">Dias Freeze</label>
@@ -64,14 +57,12 @@
       </div>
     </div>
 
-    <!-- Main Result: Real Blackhole (Pace 24) -->
     <div class="bg-red-950/40 border border-red-500/40 rounded-xl p-4 text-center space-y-1">
       <span class="text-xs font-semibold uppercase tracking-wider text-red-400">Absorção Real (Blackhole Pace 24)</span>
       <div id="blackholeDate" class="text-2xl font-black text-red-100">-- / -- / ----</div>
       <p id="blackholeDays" class="text-xs text-red-300/70">Total: 0 dias até a eliminação</p>
     </div>
 
-    <!-- Secondary Result: Pace Switch Warning -->
     <div id="paceNoticeBox" class="bg-slate-900/80 border border-amber-500/30 rounded-xl p-3 text-center space-y-1">
       <span class="text-[10px] font-semibold uppercase tracking-wider text-amber-400">Limite do Pace Selecionado</span>
       <div id="paceSwitchDate" class="text-lg font-bold text-amber-200">-- / -- / ----</div>
@@ -79,7 +70,68 @@
     </div>
   </div>
 
-  <!-- Carrega a lógica principal como um módulo ES6 -->
-  <script type="module" src="./assets/js/app.js"></script>
+  <script>
+    const PACE_MATRIX = {
+      0: { 8: 8,   12: 13,  15: 18,  18: 24,  22: 30,  24: 45 },
+      1: { 8: 32,  12: 48,  15: 60,  18: 72,  22: 88,  24: 118 },
+      2: { 8: 54,  12: 81,  15: 101, 18: 121, 22: 148, 24: 178 },
+      3: { 8: 90,  12: 134, 15: 168, 18: 201, 22: 246, 24: 306 },
+      4: { 8: 141, 12: 211, 15: 264, 18: 316, 22: 387, 24: 447 },
+      5: { 8: 212, 12: 318, 15: 398, 18: 478, 22: 584, 24: 644 },
+      6: { 8: 244, 12: 365, 15: 457, 18: 548, 22: 670, 24: 730 },
+    };
+
+    function formatDate(date) {
+      return date.toLocaleDateString('pt-PT', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric'
+      });
+    }
+
+    function updateCalculation() {
+      const startDateInput = document.getElementById('startDate').value;
+      if (!startDateInput) return;
+
+      const currentPace = parseInt(document.getElementById('pace').value);
+      const milestone = parseInt(document.getElementById('milestone').value);
+      const freeze = parseInt(document.getElementById('freeze').value) || 0;
+      const bonus = parseInt(document.getElementById('bonus').value) || 0;
+
+      const [year, month, day] = startDateInput.split('-').map(Number);
+      
+      // Blackhole Real (Pace 24)
+      const maxMatrixDays = PACE_MATRIX[milestone][24];
+      const totalBlackholeDays = maxMatrixDays + freeze + bonus;
+      const realBlackholeDate = new Date(year, month - 1, day);
+      realBlackholeDate.setDate(realBlackholeDate.getDate() + totalBlackholeDays);
+
+      document.getElementById('blackholeDate').innerText = formatDate(realBlackholeDate);
+      document.getElementById('blackholeDays').innerText = `Total: ${totalBlackholeDays} dias (${maxMatrixDays}d [P24] + ${freeze}d Freeze + ${bonus}d Bônus)`;
+
+      // Limite do Pace Selecionado
+      const currentPaceDays = PACE_MATRIX[milestone][currentPace];
+      const totalPaceDays = currentPaceDays + freeze + bonus;
+      const paceSwitchDate = new Date(year, month - 1, day);
+      paceSwitchDate.setDate(paceSwitchDate.getDate() + totalPaceDays);
+
+      const noticeBox = document.getElementById('paceNoticeBox');
+      
+      if (currentPace === 24) {
+        noticeBox.classList.add('hidden');
+      } else {
+        noticeBox.classList.remove('hidden');
+        document.getElementById('paceSwitchDate').innerText = formatDate(paceSwitchDate);
+      }
+    }
+
+    document.getElementById('startDate').valueAsDate = new Date();
+
+    ['startDate', 'pace', 'milestone', 'freeze', 'bonus'].forEach(id => {
+      document.getElementById(id).addEventListener('input', updateCalculation);
+    });
+
+    updateCalculation();
+  </script>
 </body>
 </html>
