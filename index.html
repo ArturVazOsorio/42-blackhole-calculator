@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>42 Blackhole Calculator</title>
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex items-center justify-center p-4">
+
+  <div class="max-w-md w-full bg-slate-800 border border-slate-700 rounded-2xl p-6 shadow-xl space-y-6">
+    <!-- Header -->
+    <div class="text-center">
+      <h1 class="text-2xl font-bold text-teal-400">42 Blackhole Calculator</h1>
+      <p class="text-xs text-slate-400 mt-1">Cálculo baseado no limite do Pace 24 & Reajustes</p>
+    </div>
+
+    <!-- Inputs -->
+    <div class="space-y-4 text-sm">
+      <!-- Data de Inicio -->
+      <div>
+        <label for="startDate" class="block mb-1 text-slate-300 font-medium">Data de Início (Start Date)</label>
+        <input type="date" id="startDate" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white focus:ring-2 focus:ring-teal-400 focus:outline-none">
+      </div>
+
+      <!-- Pace Atual -->
+      <div>
+        <label for="pace" class="block mb-1 text-slate-300 font-medium">Pace Atual</label>
+        <select id="pace" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white focus:ring-2 focus:ring-teal-400 focus:outline-none">
+          <option value="8">Pace 8</option>
+          <option value="12">Pace 12</option>
+          <option value="15">Pace 15</option>
+          <option value="18" selected>Pace 18</option>
+          <option value="22">Pace 22</option>
+          <option value="24">Pace 24</option>
+        </select>
+      </div>
+
+      <!-- Milestone -->
+      <div>
+        <label for="milestone" class="block mb-1 text-slate-300 font-medium">Milestone Target</label>
+        <select id="milestone" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white focus:ring-2 focus:ring-teal-400 focus:outline-none">
+          <option value="0">Milestone 0</option>
+          <option value="1">Milestone 1</option>
+          <option value="2">Milestone 2</option>
+          <option value="3" selected>Milestone 3</option>
+          <option value="4">Milestone 4</option>
+          <option value="5">Milestone 5</option>
+          <option value="6">Milestone 6</option>
+        </select>
+      </div>
+
+      <!-- Extras Grid -->
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label for="freeze" class="block mb-1 text-slate-300 font-medium">Dias Freeze</label>
+          <input type="number" id="freeze" value="0" min="0" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white focus:ring-2 focus:ring-teal-400 focus:outline-none">
+        </div>
+        <div>
+          <label for="bonus" class="block mb-1 text-slate-300 font-medium">Dias Bônus</label>
+          <input type="number" id="bonus" value="0" min="0" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white focus:ring-2 focus:ring-teal-400 focus:outline-none">
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Result: Real Blackhole (Pace 24) -->
+    <div class="bg-red-950/40 border border-red-500/40 rounded-xl p-4 text-center space-y-1">
+      <span class="text-xs font-semibold uppercase tracking-wider text-red-400">Absorção Real (Blackhole Pace 24)</span>
+      <div id="blackholeDate" class="text-2xl font-black text-red-100">-- / -- / ----</div>
+      <p id="blackholeDays" class="text-xs text-red-300/70">Total: 0 dias até a eliminação</p>
+    </div>
+
+    <!-- Secondary Result: Pace Switch Warning -->
+    <div id="paceNoticeBox" class="bg-slate-900/80 border border-amber-500/30 rounded-xl p-3 text-center space-y-1">
+      <span class="text-[10px] font-semibold uppercase tracking-wider text-amber-400">Limite do Pace Selecionado</span>
+      <div id="paceSwitchDate" class="text-lg font-bold text-amber-200">-- / -- / ----</div>
+      <p id="paceNoticeText" class="text-xs text-slate-400">Se não concluir a milestone até esta data, reajusta para o próximo Pace.</p>
+    </div>
+  </div>
+
+  <!-- Carrega a lógica principal como um módulo ES6 -->
+  <script type="module" src="./assets/js/app.js"></script>
+</body>
+</html>
