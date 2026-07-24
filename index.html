@@ -1,4 +1,4 @@
-git@github.com:ArturVazOsorio/42-blackhole-calculator.git<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt">
 <head>
   <meta charset="UTF-8">
@@ -57,10 +57,17 @@ git@github.com:ArturVazOsorio/42-blackhole-calculator.git<!DOCTYPE html>
       </div>
     </div>
 
-    <div class="bg-red-950/40 border border-red-500/40 rounded-xl p-4 text-center space-y-1">
+    <!-- Blackhole Real Box -->
+    <div class="bg-red-950/40 border border-red-500/40 rounded-xl p-4 text-center space-y-2">
       <span class="text-xs font-semibold uppercase tracking-wider text-red-400">Absorção Real (Blackhole Pace 24)</span>
       <div id="blackholeDate" class="text-2xl font-black text-red-100">-- / -- / ----</div>
-      <p id="blackholeDays" class="text-xs text-red-300/70">Total: 0 dias até a eliminação</p>
+      
+      <!-- Novo Campo: Dias restantes a partir de Hoje -->
+      <div id="remainingDaysBox" class="inline-block bg-red-900/60 border border-red-500/50 rounded-lg px-3 py-1">
+        <span id="daysFromToday" class="text-sm font-bold text-red-200">0 dias restantes a partir de hoje</span>
+      </div>
+
+      <p id="blackholeDays" class="text-xs text-red-300/70">Total desde o início: 0 dias até a eliminação</p>
     </div>
 
     <div id="paceNoticeBox" class="bg-slate-900/80 border border-amber-500/30 rounded-xl p-3 text-center space-y-1">
@@ -107,7 +114,23 @@ git@github.com:ArturVazOsorio/42-blackhole-calculator.git<!DOCTYPE html>
       realBlackholeDate.setDate(realBlackholeDate.getDate() + totalBlackholeDays);
 
       document.getElementById('blackholeDate').innerText = formatDate(realBlackholeDate);
-      document.getElementById('blackholeDays').innerText = `Total: ${totalBlackholeDays} dias (${maxMatrixDays}d [P24] + ${freeze}d Freeze + ${bonus}d Bônus)`;
+      document.getElementById('blackholeDays').innerText = `Total desde o início: ${totalBlackholeDays} dias (${maxMatrixDays}d [P24] + ${freeze}d Freeze + ${bonus}d Bônus)`;
+
+      // Cálculo dos dias restantes a partir de Hoje
+      const today = new Date();
+      today.setHours(0, 0, 0, 0); // Normalizar horário de hoje para meia-noite
+      
+      const diffTime = realBlackholeDate.getTime() - today.getTime();
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+      const daysFromTodayElem = document.getElementById('daysFromToday');
+      if (diffDays < 0) {
+        daysFromTodayElem.innerText = `Blackhole ultrapassado há ${Math.abs(diffDays)} dia(s)`;
+      } else if (diffDays === 0) {
+        daysFromTodayElem.innerText = `Blackhole é hoje!`;
+      } else {
+        daysFromTodayElem.innerText = `${diffDays} dia(s) restante(s) a partir de hoje`;
+      }
 
       // Limite do Pace Selecionado
       const currentPaceDays = PACE_MATRIX[milestone][currentPace];
