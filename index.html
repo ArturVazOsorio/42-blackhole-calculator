@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,17 +11,17 @@
   <div class="max-w-md w-full bg-slate-800 border border-slate-700 rounded-2xl p-6 shadow-xl space-y-6">
     <div class="text-center">
       <h1 class="text-2xl font-bold text-teal-400">42 Blackhole Calculator</h1>
-      <p class="text-xs text-slate-400 mt-1">Cálculo baseado no limite do Pace 24 & Reajustes</p>
+      <p class="text-xs text-slate-400 mt-1">Calculation based on Pace 24 limit & Adjustments</p>
     </div>
 
     <div class="space-y-4 text-sm">
       <div>
-        <label for="startDate" class="block mb-1 text-slate-300 font-medium">Data de Início (Start Date)</label>
+        <label for="startDate" class="block mb-1 text-slate-300 font-medium">Start Date</label>
         <input type="date" id="startDate" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white focus:ring-2 focus:ring-teal-400 focus:outline-none">
       </div>
 
       <div>
-        <label for="pace" class="block mb-1 text-slate-300 font-medium">Pace Atual</label>
+        <label for="pace" class="block mb-1 text-slate-300 font-medium">Current Pace</label>
         <select id="pace" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white focus:ring-2 focus:ring-teal-400 focus:outline-none">
           <option value="8">Pace 8</option>
           <option value="12">Pace 12</option>
@@ -33,7 +33,7 @@
       </div>
 
       <div>
-        <label for="milestone" class="block mb-1 text-slate-300 font-medium">Milestone Target</label>
+        <label for="milestone" class="block mb-1 text-slate-300 font-medium">Target Milestone</label>
         <select id="milestone" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white focus:ring-2 focus:ring-teal-400 focus:outline-none">
           <option value="0">Milestone 0</option>
           <option value="1">Milestone 1</option>
@@ -47,35 +47,42 @@
 
       <div class="grid grid-cols-2 gap-3">
         <div>
-          <label for="freeze" class="block mb-1 text-slate-300 font-medium">Dias Freeze</label>
+          <label for="freeze" class="block mb-1 text-slate-300 font-medium">Freeze Days</label>
           <input type="number" id="freeze" value="0" min="0" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white focus:ring-2 focus:ring-teal-400 focus:outline-none">
         </div>
         <div>
-          <label for="bonus" class="block mb-1 text-slate-300 font-medium">Dias Bônus</label>
+          <label for="bonus" class="block mb-1 text-slate-300 font-medium">Bonus Days</label>
           <input type="number" id="bonus" value="0" min="0" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white focus:ring-2 focus:ring-teal-400 focus:outline-none">
         </div>
       </div>
     </div>
 
-    <!-- Blackhole Real Box -->
+    <!-- Real Blackhole Box -->
     <div class="bg-red-950/40 border border-red-500/40 rounded-xl p-4 text-center space-y-2">
-      <span class="text-xs font-semibold uppercase tracking-wider text-red-400">Absorção Real (Blackhole Pace 24)</span>
+      <span class="text-xs font-semibold uppercase tracking-wider text-red-400">Real Absorption (Pace 24 Blackhole)</span>
       <div id="blackholeDate" class="text-2xl font-black text-red-100">-- / -- / ----</div>
       
-      <!-- CAMPO NOVO AQUI -->
       <div class="pt-1">
         <span id="daysFromToday" class="inline-block bg-red-900/60 border border-red-500/50 rounded-lg px-3 py-1.5 text-sm font-bold text-red-200">
-          -- dias restantes a partir de hoje
+          -- days remaining from today
         </span>
       </div>
 
-      <p id="blackholeDays" class="text-xs text-red-300/70 pt-1">Total desde o início: 0 dias até a eliminação</p>
+      <p id="blackholeDays" class="text-xs text-red-300/70 pt-1">Total from start: 0 days until absorption</p>
     </div>
 
-    <div id="paceNoticeBox" class="bg-slate-900/80 border border-amber-500/30 rounded-xl p-3 text-center space-y-1">
-      <span class="text-[10px] font-semibold uppercase tracking-wider text-amber-400">Limite do Pace Selecionado</span>
-      <div id="paceSwitchDate" class="text-lg font-bold text-amber-200">-- / -- / ----</div>
-      <p id="paceNoticeText" class="text-xs text-slate-400">Se não concluir a milestone até esta data, reajusta para o próximo Pace.</p>
+    <!-- Selected Pace Limit Box -->
+    <div id="paceNoticeBox" class="bg-slate-900/80 border border-amber-500/30 rounded-xl p-4 text-center space-y-2">
+      <span class="text-[10px] font-semibold uppercase tracking-wider text-amber-400">Selected Pace Limit</span>
+      <div id="paceSwitchDate" class="text-xl font-bold text-amber-200">-- / -- / ----</div>
+      
+      <div class="pt-1">
+        <span id="paceDaysFromToday" class="inline-block bg-amber-950/80 border border-amber-500/40 rounded-lg px-3 py-1 text-xs font-semibold text-amber-200">
+          -- days remaining from today
+        </span>
+      </div>
+
+      <p id="paceNoticeText" class="text-xs text-slate-400 pt-1">If you don't reach this milestone by this date, your pace will drop.</p>
     </div>
   </div>
 
@@ -91,11 +98,28 @@
     };
 
     function formatDate(date) {
-      return date.toLocaleDateString('pt-PT', {
+      return date.toLocaleDateString('en-GB', {
         day: '2-digit',
         month: '2-digit',
         year: 'numeric'
       });
+    }
+
+    function calculateDiffDays(targetDate, today) {
+      const target = new Date(targetDate);
+      target.setHours(0, 0, 0, 0);
+      const diffTime = target.getTime() - today.getTime();
+      return Math.round(diffTime / (1000 * 60 * 60 * 24));
+    }
+
+    function getDaysText(diffDays, pastLabel, todayLabel) {
+      if (diffDays < 0) {
+        return `${pastLabel} ${Math.abs(diffDays)} day(s) ago`;
+      } else if (diffDays === 0) {
+        return todayLabel;
+      } else {
+        return `${diffDays} day(s) remaining from today`;
+      }
     }
 
     function updateCalculation() {
@@ -108,36 +132,22 @@
       const bonus = parseInt(document.getElementById('bonus').value) || 0;
 
       const [year, month, day] = startDateInput.split('-').map(Number);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
       
-      // Blackhole Real (Pace 24)
+      // 1. Real Blackhole (Pace 24)
       const maxMatrixDays = PACE_MATRIX[milestone][24];
       const totalBlackholeDays = maxMatrixDays + freeze + bonus;
       const realBlackholeDate = new Date(year, month - 1, day);
       realBlackholeDate.setDate(realBlackholeDate.getDate() + totalBlackholeDays);
 
       document.getElementById('blackholeDate').innerText = formatDate(realBlackholeDate);
-      document.getElementById('blackholeDays').innerText = `Total desde o início: ${totalBlackholeDays} dias (${maxMatrixDays}d [P24] + ${freeze}d Freeze + ${bonus}d Bônus)`;
+      document.getElementById('blackholeDays').innerText = `Total from start: ${totalBlackholeDays} days (${maxMatrixDays}d [P24] + ${freeze}d Freeze + ${bonus}d Bonus)`;
 
-      // Cálculo dos dias a partir de hoje
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-      
-      const targetDate = new Date(realBlackholeDate);
-      targetDate.setHours(0, 0, 0, 0);
+      const bhDiffDays = calculateDiffDays(realBlackholeDate, today);
+      document.getElementById('daysFromToday').innerText = getDaysText(bhDiffDays, 'Blackhole passed', 'Blackhole is TODAY!');
 
-      const diffTime = targetDate.getTime() - today.getTime();
-      const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
-
-      const daysFromTodayElem = document.getElementById('daysFromToday');
-      if (diffDays < 0) {
-        daysFromTodayElem.innerText = `Blackhole ultrapassado há ${Math.abs(diffDays)} dia(s)`;
-      } else if (diffDays === 0) {
-        daysFromTodayElem.innerText = `Blackhole é HOJE!`;
-      } else {
-        daysFromTodayElem.innerText = `${diffDays} dia(s) restantes a partir de hoje`;
-      }
-
-      // Limite do Pace Selecionado
+      // 2. Selected Pace Limit
       const currentPaceDays = PACE_MATRIX[milestone][currentPace];
       const totalPaceDays = currentPaceDays + freeze + bonus;
       const paceSwitchDate = new Date(year, month - 1, day);
@@ -150,6 +160,9 @@
       } else {
         noticeBox.classList.remove('hidden');
         document.getElementById('paceSwitchDate').innerText = formatDate(paceSwitchDate);
+
+        const paceDiffDays = calculateDiffDays(paceSwitchDate, today);
+        document.getElementById('paceDaysFromToday').innerText = getDaysText(paceDiffDays, 'Pace limit passed', 'Pace limit is TODAY!');
       }
     }
 
@@ -162,5 +175,4 @@
     updateCalculation();
   </script>
 </body>
-</html>
 </html>
