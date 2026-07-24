@@ -62,12 +62,14 @@
       <span class="text-xs font-semibold uppercase tracking-wider text-red-400">Absorção Real (Blackhole Pace 24)</span>
       <div id="blackholeDate" class="text-2xl font-black text-red-100">-- / -- / ----</div>
       
-      <!-- Novo Campo: Dias restantes a partir de Hoje -->
-      <div id="remainingDaysBox" class="inline-block bg-red-900/60 border border-red-500/50 rounded-lg px-3 py-1">
-        <span id="daysFromToday" class="text-sm font-bold text-red-200">0 dias restantes a partir de hoje</span>
+      <!-- CAMPO NOVO AQUI -->
+      <div class="pt-1">
+        <span id="daysFromToday" class="inline-block bg-red-900/60 border border-red-500/50 rounded-lg px-3 py-1.5 text-sm font-bold text-red-200">
+          -- dias restantes a partir de hoje
+        </span>
       </div>
 
-      <p id="blackholeDays" class="text-xs text-red-300/70">Total desde o início: 0 dias até a eliminação</p>
+      <p id="blackholeDays" class="text-xs text-red-300/70 pt-1">Total desde o início: 0 dias até a eliminação</p>
     </div>
 
     <div id="paceNoticeBox" class="bg-slate-900/80 border border-amber-500/30 rounded-xl p-3 text-center space-y-1">
@@ -116,20 +118,23 @@
       document.getElementById('blackholeDate').innerText = formatDate(realBlackholeDate);
       document.getElementById('blackholeDays').innerText = `Total desde o início: ${totalBlackholeDays} dias (${maxMatrixDays}d [P24] + ${freeze}d Freeze + ${bonus}d Bônus)`;
 
-      // Cálculo dos dias restantes a partir de Hoje
+      // Cálculo dos dias a partir de hoje
       const today = new Date();
-      today.setHours(0, 0, 0, 0); // Normalizar horário de hoje para meia-noite
+      today.setHours(0, 0, 0, 0);
       
-      const diffTime = realBlackholeDate.getTime() - today.getTime();
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      const targetDate = new Date(realBlackholeDate);
+      targetDate.setHours(0, 0, 0, 0);
+
+      const diffTime = targetDate.getTime() - today.getTime();
+      const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
 
       const daysFromTodayElem = document.getElementById('daysFromToday');
       if (diffDays < 0) {
         daysFromTodayElem.innerText = `Blackhole ultrapassado há ${Math.abs(diffDays)} dia(s)`;
       } else if (diffDays === 0) {
-        daysFromTodayElem.innerText = `Blackhole é hoje!`;
+        daysFromTodayElem.innerText = `Blackhole é HOJE!`;
       } else {
-        daysFromTodayElem.innerText = `${diffDays} dia(s) restante(s) a partir de hoje`;
+        daysFromTodayElem.innerText = `${diffDays} dia(s) restantes a partir de hoje`;
       }
 
       // Limite do Pace Selecionado
@@ -157,4 +162,5 @@
     updateCalculation();
   </script>
 </body>
+</html>
 </html>
